@@ -1,0 +1,21 @@
+services:
+  redis:
+    image: bitnami/valkey:latest
+    environment:
+      - VALKEY_PASSWORD=default
+
+  server:
+    build:
+      context: ./server
+    depends_on:
+      redis:
+        condition: service_started
+    ports:
+      - "8000:8000"
+
+  worker:
+    build:
+      context: ./worker
+    depends_on:
+      redis:
+        condition: service_started
